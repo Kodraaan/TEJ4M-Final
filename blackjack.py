@@ -3,7 +3,7 @@ import sys
 from random import randint
 
 from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE,SIG_DFL)  # not sure what this is, it fixed a weird bug
+signal(SIGPIPE, SIG_DFL)  # not sure what this is, it fixed a weird bug
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -19,21 +19,21 @@ def newcard():
 def startgame():
     dealer = [newcard(), newcard()]
     player = [newcard(), newcard()]
-    return dealer, player
+    return dealer, player, 1
 
 def maketurn(player, dealer, move):
     player_score = sum(player)
     dealer_score = sum(dealer)
     if move == 1 and player_score == 21:
-        return 0, ''
-    elif move == 1 and dealer_score == 21:
         return 1, ''
-    elif player_score > 21:
+    elif move == 1 and dealer_score == 21:
         return 2, ''
-    elif dealer_score > 21:
+    elif player_score > 21:
         return 3, ''
+    elif dealer_score > 21:
+        return 4, ''
     else:
-        return 4, 'Make a turn!'
+        return 0, 'Make a turn!'
 
 def dealerturn(dealer):
     if sum(dealer) < 17:
@@ -44,10 +44,9 @@ while True:
     print('Waiting for a connection...')
     connection, client_address = sock.accept()
     print('Starting blackjack game with', client_address)
-    move_num = 1
     standing = False
 
-    dealer, player = startgame()
+    dealer, player, move_num = startgame()
     while True:
         code, msg = maketurn(player, dealer, move_num)
         move_num += 1
@@ -58,7 +57,7 @@ while True:
         connection.sendall(str.encode(client_message))
 
         print('code is ' + str(code))
-        if code == 4: # Player must make a move
+        if code == 0: # Player must make a move
             if standing == False:
                 print('get player move')
                 move, anc, flags, addr = connection.recvmsg(5)
@@ -87,19 +86,17 @@ while True:
 
 
     messages = [
+        '',
         'Player blackjack! Player wins!',
         'Dealer blackjack! Dealer wins!',
         'Player bust! Dealer wins!',
         'Dealer bust! Player wins!',
-        '',
         'Dealer wins!',
         'Player wins!'
     ]
 
     print(messages[code])
     connection.sendall(str.encode(messages[code]))
-
-    # connection.sendall(b'test data')
 
     # Clean up the connection
     connection.close()
