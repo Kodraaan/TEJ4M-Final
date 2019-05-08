@@ -25,15 +25,15 @@ def maketurn(player, dealer, move):
     player_score = sum(player)
     dealer_score = sum(dealer)
     if move == 1 and player_score == 21:
-        return 1, ''
+        return 0, ''
     elif move == 1 and dealer_score == 21:
-        return 2, ''
+        return 1, ''
     elif player_score > 21:
-        return 3, ''
+        return 2, ''
     elif dealer_score > 21:
-        return 4, ''
+        return 3, ''
     else:
-        return 0, 'Make a turn!'
+        return 4, 'Make a turn!'
 
 def dealerturn(dealer):
     if sum(dealer) < 17:
@@ -54,10 +54,10 @@ while True:
         if standing:
             msg = ''
         client_message = 'you have ' + str(sum(player)) + ', dealer shows ' + str(dealer[1]) + '\n' + msg
-        connection.sendall(str.encode(client_message))
+        connection.sendmsg([str.encode(client_message)])
 
         print('code is ' + str(code))
-        if code == 0: # Player must make a move
+        if code == 4: # Player must make a move
             if standing == False:
                 print('get player move')
                 move, anc, flags, addr = connection.recvmsg(5)
@@ -86,17 +86,19 @@ while True:
 
 
     messages = [
-        '',
         'Player blackjack! Player wins!',
         'Dealer blackjack! Dealer wins!',
         'Player bust! Dealer wins!',
         'Dealer bust! Player wins!',
+        '',
         'Dealer wins!',
         'Player wins!'
     ]
 
+    print(code)
     print(messages[code])
-    connection.sendall(str.encode(messages[code]))
+    client_message = 'Player had ' + str(player) + ' = ' + str(sum(player)) + ', Dealer had ' + str(dealer) + ' = ' + str(sum(dealer)) + '\n' + messages[code]
+    connection.sendmsg([str.encode(client_message)])
 
     # Clean up the connection
     connection.close()
