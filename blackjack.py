@@ -3,7 +3,7 @@ import sys
 from random import randint
 
 from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE,SIG_DFL)  # not sure what this is, it fixed a weird bug
+signal(SIGPIPE, SIG_DFL)  # not sure what this is, it fixed a weird bug
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -19,7 +19,7 @@ def newcard():
 def startgame():
     dealer = [newcard(), newcard()]
     player = [newcard(), newcard()]
-    return dealer, player
+    return dealer, player, 1
 
 def maketurn(player, dealer, move):
     player_score = sum(player)
@@ -44,10 +44,9 @@ while True:
     print('Waiting for a connection...')
     connection, client_address = sock.accept()
     print('Starting blackjack game with', client_address)
-    move_num = 1
     standing = False
 
-    dealer, player = startgame()
+    dealer, player, move_num = startgame()
     while True:
         code, msg = maketurn(player, dealer, move_num)
         move_num += 1
@@ -55,7 +54,7 @@ while True:
         if standing:
             msg = ''
         client_message = 'you have ' + str(sum(player)) + ', dealer shows ' + str(dealer[1]) + '\n' + msg
-        connection.sendall(str.encode(client_message))
+        connection.sendmsg([str.encode(client_message)])
 
         print('code is ' + str(code))
         if code == 4: # Player must make a move
@@ -96,10 +95,10 @@ while True:
         'Player wins!'
     ]
 
+    print(code)
     print(messages[code])
-    connection.sendall(str.encode(messages[code]))
-
-    # connection.sendall(b'test data')
+    client_message = 'Player had ' + str(player) + ' = ' + str(sum(player)) + ', Dealer had ' + str(dealer) + ' = ' + str(sum(dealer)) + '\n' + messages[code]
+    connection.sendmsg([str.encode(client_message)])
 
     # Clean up the connection
     connection.close()

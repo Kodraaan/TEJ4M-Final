@@ -10,4 +10,8 @@ Looks like the parameter for connection.recv() describes how many characters rec
 Used ssh-keygen to allow us ssh access to the pi without using the password. This will only work for our machines. Experimented with sending messages via TCP to and from the pi.
 
 ## May 7:
-Created a primitive blackjack game in python using the client-server model. The pi runs a TCP server and acts as the dealer, any client can connect and play a game of blackjack. 
+Started work on a primitive blackjack game in python using the client-server model. The pi runs a TCP server and acts as the dealer, any client can connect and play a game of blackjack. 
+
+## May 8:
+Completed minimum viable product of the blackjack game including most game rules. This served as a valuable learning experience for TCP communication, python3 syntax, and the python socket library.
+
