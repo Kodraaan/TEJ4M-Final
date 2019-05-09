@@ -15,3 +15,5 @@ Started work on a primitive blackjack game in python using the client-server mod
 ## May 8:
 Completed minimum viable product of the blackjack game including most game rules. This served as a valuable learning experience for TCP communication, python3 syntax, and the python socket library.
 
+## May 9:
+Started cryptocurrency peer-to-peer client code. Resolved the issue of not being able to find the client's own IP address. More blackjack game code debugging.
