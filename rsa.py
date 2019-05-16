@@ -1,8 +1,8 @@
-p, q = 10429, 30853
+p, q = 23, 11
 N = p*q
 phi_N = (p-1)*(q-1)
 
-def prime_factors(n):
+def prime_factors(n):   #TODO: may be a lot faster with Euler's GCD
     ans = []
     temp = n
     if n > 0:
@@ -14,7 +14,7 @@ def prime_factors(n):
                     break
     return ans
 
-def coprime(N):
+def coprime(): #AKA finding e; using instance (global) variables phi_N, N, p and q but N's only prime factors are p and q
     phi_N_factors = prime_factors(phi_N)
     for i in range(2,phi_N):
         found_it = True
@@ -33,7 +33,11 @@ def find_d(e):
             return i
     return None
 
-public_key = (coprime(N),N)
+public_key = (coprime(),N)
 private_key = (find_d(public_key[0]),N)
+
+print('public:', public_key)
+print('private:',private_key)
+print('N',N)
 
 print((2**public_key[0]%public_key[1])**private_key[0]%private_key[1])
