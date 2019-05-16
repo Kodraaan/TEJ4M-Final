@@ -16,3 +16,5 @@ print()
 for i in encrypted_message:
     print(chr(i**private_key[0]%private_key[1]),end='')
 print()
+
+#TODO: remember checking out pow(ord(char),key,n) 
