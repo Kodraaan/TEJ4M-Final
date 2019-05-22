@@ -5,7 +5,7 @@ import collections
 import socket
 import uuid
 
-server_address = ('192.168.0.197', 10000)
+server_address = ('192.168.0.197', 8765)    #Using a random port to avoid conflict with anything else
 queue = collections.deque()
 
 # Utility functions
@@ -29,7 +29,7 @@ while True:
     if conn_type == "node_new":
         # A new node is attempting to connect
 
-        rotate_queue = False
+        rotate_queue = False    # Why is this variable necessary?
         if len(queue) == 0:
             # This is the first node, do nothing
             send_msg(conn, "You are the first connection")
