@@ -12,8 +12,11 @@ queue = collections.deque()
 def recv_msg(conn, bytes, encoding = 'ascii'):
     return conn.recvmsg(bytes)[0].decode(encoding)
 
-def send_msg(sock, msg):
-	sock.sendmsg([msg.encode()])
+def send_msg(sock, msg, confirm = False):
+    sock.sendmsg([msg.encode()])
+    if confirm:
+        success = recv_msg(sock, 100)
+        return success == "confirm" # This can likely be cleaned up
 
 # Initialize socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,7 +39,7 @@ while True:
         else:
             # Choose a seed node
             seed_node = queue[0]
-            send_msg(conn, seed_node["ip"][0])
+            send_msg(conn, seed_node["ip"][0], True)
             send_msg(conn, str(seed_node["uuid"]))
             rotate_queue = True
             
@@ -48,12 +51,17 @@ while True:
         }
 
         queue.append(node)
-        queue.rotate(-1)
+        if rotate_queue:
+            queue.rotate(-1)
+
+        # debug
         print(queue)
         print("------------")
+        # end debug
 
-    #elif conn_type == "node_report":
+    elif conn_type == "node_report":
         # A network node is making a report
+        print("A network node is making a report!")
         
 
     conn.close()
