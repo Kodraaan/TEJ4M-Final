@@ -27,7 +27,7 @@ sock.listen(1)
 
 while True:
     conn, client_addr = sock.accept()
-    conn_type = recv_msg(conn, 10)
+    conn_type = recv_msg(conn, 20)
 
     if conn_type == "node_new":
         # A new node is attempting to connect
@@ -35,7 +35,7 @@ while True:
         rotate_queue = False    # Why is this variable necessary?
         if len(queue) == 0:
             # This is the first node, do nothing
-            send_msg(conn, "You are the first connection")
+            send_msg(conn, "")
         else:
             # Choose a seed node
             seed_node = queue[0]
