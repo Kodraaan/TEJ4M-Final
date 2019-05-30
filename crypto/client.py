@@ -1,5 +1,5 @@
 # client.py
-# 	thornlea-coin client
+# CanadianPesos client
 
 import socket
 
@@ -39,7 +39,6 @@ seed_uuid = recv_msg(sock, 100)
 print("ip: " + seed_ip)
 print("uuid: " + seed_uuid)
 
-
 # Now connect to that seed node so that they know they have a new neighbour
 sock.connect((seed_ip,8765))
 send_msg(sock,"add_neighbour")
@@ -48,10 +47,16 @@ sock.bind((get_ip(),8765))
 sock.listen(1)
 neighbours = []
 
+def broadcast(sock, transaction, source, destination): # passes the socket used, transaction message, where the message was received, and neighbours
+    for i in destination:
+        if i != source:
+            send_msg(sock,transaction)
+
 while True:
     # TODO: listen for connections and broadcast messages
     # Not too sure if broadcasting still requires "solid" connections
     conn, client_addr = sock.accept()
+    # TODO: need to add uuid
     neighbours.append(client_addr)
 
 sock.close()

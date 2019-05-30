@@ -26,3 +26,6 @@ Cryptocurrency networking solution: whenever a new node wants to join the networ
 
 ## May 21
 Working on seed node directory server code and a basic client to test it. The directory allows an entrant to the crypto network to find a first node to connect to. The directory will keep a queue of opt-in nodes which helps create an effective network.
+
+## May 29
+A protocol reference file is created to record the messages sent in the network and their respective purpose.
