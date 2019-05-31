@@ -1,4 +1,5 @@
-p, q = 23, 11
+from hashlib import sha256
+p, q = 103, 11
 N = p*q
 phi_N = (p-1)*(q-1)
 
@@ -33,6 +34,48 @@ def find_d(e):
             return i
     return None
 
+def encrypt(privatek, plaintext):
+    #Unpack the key into it's components
+    key, n = privatek
+
+    #Convert each letter in the plaintext to numbers based on the character using a^b mod m
+            
+    numberRepr = [ord(char) for char in plaintext]
+    print("Number representation before encryption: ", numberRepr)
+    cipher = [pow(ord(char),key,n) for char in plaintext]
+    
+    #Return the array of bytes
+    return cipher
+
+
+def decrypt(publick, ciphertext):
+    #Unpack the key into its components
+    key, n = publick
+       
+    #Generate the plaintext based on the ciphertext and key using a^b mod m
+    numberRepr = [pow(char, key, n) for char in ciphertext]
+    plain = [chr(pow(char, key, n)) for char in ciphertext]
+
+    print("Decrypted number representation is: ", numberRepr)
+    
+    #Return the array of bytes as a string
+    return ''.join(plain)
+    
+    
+def hashFunction(message):
+    return sha256(message.encode("UTF-8")).hexdigest()
+    
+    
+def verify(receivedHashed, message):
+    ourHashed = hashFunction(message)
+    if receivedHashed == ourHashed:
+        print("Verification successful: ", )
+        print(receivedHashed, " = ", ourHashed)
+    else:
+        
+        print("Verification failed")
+        print(receivedHashed, " != ", ourHashed)
+
 public_key = (coprime(),N)
 private_key = (find_d(public_key[0]),N)
 
@@ -40,4 +83,4 @@ print('public:', public_key)
 print('private:',private_key)
 print('N',N)
 
-print((2**public_key[0]%public_key[1])**private_key[0]%private_key[1])
+# print((2**public_key[0]%public_key[1])**private_key[0]%private_key[1])
