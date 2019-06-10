@@ -27,18 +27,6 @@ def recv_msg(conn, bytes, confirm = False, encoding = 'ascii'):
 def send_msg(conn, msg): 
     conn.sendmsg([msg.encode()])
 
-# Gets its own ip address
-def get_ip():
-    aiya = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    try:
-        aiya.connect(('10.255.255.255',1))
-        IP = aiya.getsockname()[0]
-    except:
-        IP = '127.0.0.1'
-    finally:
-        aiya.close()
-    return IP
-
 # Find a new seed node
 def find_seed():
     if not offline_debug_mode:
@@ -106,7 +94,7 @@ while True:
     if command == "1":
         balance = get_balance(wallet_id)
         print("The balance is " + balance)
-        
+
     elif command == "2":
         print("Enter wallet id of the recipient:")
         recipient = input()
