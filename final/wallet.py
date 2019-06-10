@@ -59,10 +59,23 @@ def get_balance(wallet_id):
     sock.connect((seed_ip, 8765))
     send_msg(sock, "get_block")
     block_data = recv_msg(sock, 1000)
+    balance = 0
     # we must go through each event in the block and trace the relevant ones to get our balance
     
-    return 0
+    return balance
 
+# Send coins to a wallet id
+def send_coins(recipient, amount):
+    seed_ip = find_seed()
+    sock.connect((seed_ip, 8765))
+
+    # this form of communicating the transaction is not necessarily how it should work
+    # ideally the entire message is simply binary data
+    transaction_msg = "make_transaction recipient=" + str(recipient) + ",amount=" + str(amount)
+    send_msg(sock, transaction_msg)
+    transaction_success = recv_msg(sock, 100)
+
+    return transaction_success
 
 
 
@@ -83,8 +96,6 @@ else:
 print("Wallet id retreived: " + wallet_id)
 
 
-# Initialize connection
-# TODO: since the server only connects with one node at a time, maybe add collision avoidance or timout/retry code
 
 
 
@@ -95,9 +106,17 @@ while True:
     if command == "1":
         balance = get_balance(wallet_id)
         print("The balance is " + balance)
+        
     elif command == "2":
-        print("Make transaction...")
-
+        print("Enter wallet id of the recipient:")
+        recipient = input()
+        print("Enter amount of coins to send:")
+        amount = input()
+        transaction_success, message = send_coins(recipient, amount)
+        if transaction_success:
+            print("Transaction Success!")
+        else:
+            print("Transaction Failure: " + message)
 
 
 
