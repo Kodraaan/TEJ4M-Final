@@ -10,7 +10,9 @@ import os.path
 from pathlib import Path
 from uuid import getnode as get_mac
 
+offline_debug_mode = True
 seed_server = ('192.168.0.197', 8765) 
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Utility functions
 
@@ -37,6 +39,34 @@ def get_ip():
         aiya.close()
     return IP
 
+# Find a new seed node
+def find_seed():
+    if not offline_debug_mode:
+        print('connecting to seed server {} port {}'.format(*seed_server))
+        sock.connect(seed_server)
+        send_msg(sock, "node_wallet")
+
+        seed_ip = recv_msg(sock, 100)
+        print("found a node, ip: " + seed_ip)
+    else:
+        seed_ip = "0.0.0.0"
+
+    return seed_ip
+
+# Check a users balance
+def get_balance(wallet_id):
+    seed_ip = find_seed()
+    sock.connect((seed_ip, 8765))
+    send_msg(sock, "get_block")
+    block_data = recv_msg(sock, 1000)
+    # we must go through each event in the block and trace the relevant ones to get our balance
+    
+    return 0
+
+
+
+
+
 # Grab our wallet id
 wallet_id = ""
 wallet_file = Path("./wallet_id")
@@ -55,17 +85,20 @@ print("Wallet id retreived: " + wallet_id)
 
 # Initialize connection
 # TODO: since the server only connects with one node at a time, maybe add collision avoidance or timout/retry code
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print('connecting to {} port {}'.format(*seed_server))
-sock.connect(seed_server)
-send_msg(sock, "node_wallet")
 
-seed_ip = recv_msg(sock, 100)
-print("found a node, ip: " + seed_ip)
 
-# Connect to the seed node, and request the block
-sock.connect((seed_ip, 8765))
-send_msg(sock,"add_neighbour")
+
+# the main loop, from here the user can interact with the program
+while True:
+    print("Select operation:\n[1] Check balance\n[2] Make transaction")
+    command = input()
+    if command == "1":
+        balance = get_balance(wallet_id)
+        print("The balance is " + balance)
+    elif command == "2":
+        print("Make transaction...")
+
+
 
 
 
