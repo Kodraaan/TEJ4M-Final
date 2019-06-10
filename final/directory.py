@@ -3,7 +3,6 @@
 
 import collections
 import socket
-import uuid
 
 server_address = ('192.168.0.197', 8765)    #Using a random port to avoid conflict with anything else
 queue = collections.deque()
@@ -29,7 +28,7 @@ while True:
     conn, client_addr = sock.accept()
     conn_type = recv_msg(conn, 20)
 
-    if conn_type == "node_new":
+    if conn_type == "node_new" or conn_type == "node_wallet":
         # A new node is attempting to connect
         if len(queue) == 0:
             # This is the first node, do nothing
@@ -37,20 +36,16 @@ while True:
         else:
             # Choose a seed node
             seed_node = queue[0]
-            send_msg(conn, seed_node["ip"][0], True)
-            send_msg(conn, str(seed_node["uuid"]))
+            send_msg(conn, seed_node["ip"][0])
 
-        # Add new node to the queue
-        node = {
-            "uuid": uuid.uuid4(),
-            "ip": client_addr
-        }
+        if conn_type == "node_new": # this can be done better, but works for now..
+            # Add new node to the queue
+            node = {
+                "ip": client_addr
+            }
 
-        queue.append(node)
-        queue.rotate(-1)
-    elif conn_type == "node_wallet":
-        print("A wallet is looking for a seed")
-
+            queue.append(node)
+            queue.rotate(-1)
     elif conn_type == "node_report":
         # A network node is making a report
         print("A network node is making a report!")

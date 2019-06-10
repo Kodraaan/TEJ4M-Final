@@ -1,0 +1,25 @@
+Blockchain cycle
+
+A name in [] brackets represents the wallet address of the user of that name.
+A value in () parentheses represents an amount of coins
+
+a few users have a coin balance
+    [Stewart] has (10 coins)
+    [Stephen] has (10 coins)
+    [Alex] has (5 coins)
+
+a transaction is made
+    [Stewart] sends (2 coins) to [Stephen]
+    [Stewart] has (8 coins)
+    [Stephen] has (12 coins)
+    nobody sends (1 coin) to [Miner]
+    [Miner] has (1 coin)
+
+the block is complete, (reward the miners whose transactions ended up in the block. perhaps the miner, when sending out the transaction, includes his own wallet id (MAC address or other) which is then rewarded as the block completes
+
+a new block is created
+    *hash of the previous block*
+    [Stewart] has (8 coins)
+    [Stephen] has (12 coins)
+    [Alex] has (5 coins)
+    ...
