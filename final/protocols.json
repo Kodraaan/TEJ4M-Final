@@ -1,0 +1,18 @@
+{
+    "global": {
+        "broadcast": true,
+        "no_broadcast": false
+    },
+    "seed_server": {
+        "node_new": 0,
+        "node_wallet": 1,
+        "node_report": 2
+    },
+    "wallet": {
+        "get_block": 0,
+        "finish_block": 1
+    },
+    "miner": {
+        "transaction": 0
+    }
+}

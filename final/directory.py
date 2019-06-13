@@ -3,6 +3,10 @@
 
 import collections
 import socket
+import json
+
+with open("protocols.json", "r") as f:
+    protocols = json.load(f)
 
 server_address = ('192.168.0.197', 8765)    #Using a random port to avoid conflict with anything else
 queue = collections.deque()
@@ -38,7 +42,7 @@ while True:
             seed_node = queue[0]
             send_msg(conn, seed_node["ip"][0])
 
-        if conn_type == "node_new": # this can be done better, but works for now..
+        if not (conn_type == "node_new"): # this can be done better, but works for now..
             # Add new node to the queue
             node = {
                 "ip": client_addr
