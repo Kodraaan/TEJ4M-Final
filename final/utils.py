@@ -17,5 +17,27 @@ def recv_msg(conn, bytes, encoding = 'ascii'):
 def send_msg(conn, msg): 
     conn.sendmsg([msg.encode()])
 
+# Find a new seed node
+def find_seed(conn_type):
+    print('connecting to seed server {} port {}'.format(*seed_server))
+    sock.connect(seed_server)
+    send_msg(sock, conn_type)
+
+    seed_ip = recv_msg(sock, 100)
+    print("found a node, ip: " + seed_ip)
+
+    return seed_ip
+
+def get_type(i):
+    return type(i).__name__
 
 
+# Convert data to message to send over TCP
+def generate_msg(data):
+    msg = b''
+
+    for i in data:
+        if get_type(i) == "bool":
+            print("hello world")
+
+        

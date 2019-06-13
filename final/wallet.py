@@ -11,23 +11,8 @@ from pathlib import Path
 from uuid import getnode as get_mac
 from utils import *
 
-offline_debug_mode = True
 seed_server = ('192.168.0.197', 8765) 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Find a new seed node
-def find_seed():
-    if not offline_debug_mode:
-        print('connecting to seed server {} port {}'.format(*seed_server))
-        sock.connect(seed_server)
-        send_msg(sock, protocols.seed_server.node_wallet)
-
-        seed_ip = recv_msg(sock, 100)
-        print("found a node, ip: " + seed_ip)
-    else:
-        seed_ip = "0.0.0.0"
-
-    return seed_ip
 
 # Check a users balance
 def get_balance(wallet_id):
@@ -47,7 +32,7 @@ def send_coins(recipient, amount):
 
     # this form of communicating the transaction is not necessarily how it should work
     # ideally the entire message is simply binary data
-    transaction_msg = "make_transaction recipient=" + str(recipient) + ",amount=" + str(amount)
+    transaction_msg = str(protocols.all.make_transaction) + "recipient=" + str(recipient) + ",amount=" + str(amount)
     send_msg(sock, transaction_msg)
     transaction_success = recv_msg(sock, 100)
 
