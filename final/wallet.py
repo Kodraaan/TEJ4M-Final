@@ -9,6 +9,10 @@ import socket
 import os.path
 from pathlib import Path
 from uuid import getnode as get_mac
+import json
+
+with open("protocols.json", "r") as f:
+    protocols = json.load(f)
 
 offline_debug_mode = True
 seed_server = ('192.168.0.197', 8765) 
@@ -45,7 +49,7 @@ def find_seed():
 def get_balance(wallet_id):
     seed_ip = find_seed()
     sock.connect((seed_ip, 8765))
-    send_msg(sock, "get_block")
+    send_msg(sock, "get_block") # protocols.get_block
     block_data = recv_msg(sock, 1000)
     balance = 0
     # we must go through each event in the block and trace the relevant ones to get our balance
