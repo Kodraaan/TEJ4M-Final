@@ -3,23 +3,10 @@
 
 import collections
 import socket
-import json
-
-with open("protocols.json", "r") as f:
-    protocols = json.load(f)
+from utils import *
 
 server_address = ('192.168.0.197', 8765)    #Using a random port to avoid conflict with anything else
 queue = collections.deque()
-
-# Utility functions
-def recv_msg(conn, bytes, encoding = 'ascii'):
-    return conn.recvmsg(bytes)[0].decode(encoding)
-
-def send_msg(sock, msg, confirm = False):
-    sock.sendmsg([msg.encode()])
-    if confirm:
-        success = recv_msg(sock, 100)
-        return success == "confirm" # This can likely be cleaned up
 
 # Initialize socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,7 +19,7 @@ while True:
     conn, client_addr = sock.accept()
     conn_type = recv_msg(conn, 20)
 
-    if conn_type == "node_new" or conn_type == "node_wallet":
+    if conn_type == protocols.seed_server.node_new or conn_type == protocols.seed_server.node_wallet:
         # A new node is attempting to connect
         if len(queue) == 0:
             # This is the first node, do nothing
@@ -42,7 +29,7 @@ while True:
             seed_node = queue[0]
             send_msg(conn, seed_node["ip"][0])
 
-        if not (conn_type == "node_new"): # this can be done better, but works for now..
+        if not (conn_type == protocols.seed_server.node_new): # this can be done better, but works for now..
             # Add new node to the queue
             node = {
                 "ip": client_addr

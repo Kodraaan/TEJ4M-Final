@@ -5,38 +5,22 @@
 # enters the network to grab blockchain, check balance by parsing the current block
 # sends transactions to network neighbours, when a miner receives it they will verify
 
-import socket
+
 import os.path
 from pathlib import Path
 from uuid import getnode as get_mac
-import json
-
-with open("protocols.json", "r") as f:
-    protocols = json.load(f)
+from utils import *
 
 offline_debug_mode = True
 seed_server = ('192.168.0.197', 8765) 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Utility functions
-
-# Receive a messages length bytes over conn
-def recv_msg(conn, bytes, confirm = False, encoding = 'ascii'):
-    msg = conn.recvmsg(bytes)[0].decode(encoding)
-    if confirm:
-        send_msg(conn, "confirm")
-    return msg
-
-# Send message msg over conn
-def send_msg(conn, msg): 
-    conn.sendmsg([msg.encode()])
 
 # Find a new seed node
 def find_seed():
     if not offline_debug_mode:
         print('connecting to seed server {} port {}'.format(*seed_server))
         sock.connect(seed_server)
-        send_msg(sock, "node_wallet")
+        send_msg(sock, protocols.seed_server.node_wallet)
 
         seed_ip = recv_msg(sock, 100)
         print("found a node, ip: " + seed_ip)
@@ -49,7 +33,7 @@ def find_seed():
 def get_balance(wallet_id):
     seed_ip = find_seed()
     sock.connect((seed_ip, 8765))
-    send_msg(sock, "get_block") # protocols.get_block
+    send_msg(sock, protocols.wallet.get_block) # protocols.get_block
     block_data = recv_msg(sock, 1000)
     balance = 0
     # we must go through each event in the block and trace the relevant ones to get our balance
