@@ -1,16 +1,18 @@
-import Crypto.Hash.MD5 as MD5
 import Crypto.PublicKey.RSA as RSA
 import Crypto.PublicKey.DSA as DSA
 import Crypto.PublicKey.ElGamal as ElGamal
 import Crypto.Util.number as CUN
 import os
+import hashlib
 
-plaintext = 'The rain in Spain falls mdainly on the Plain'
+plaintext = 'P'
 another_text = 'The rain in Spaim falls mdainly on the Plain'
 
+
 # Here is a hash of the message
-hash = MD5.new(plaintext.encode()).digest()
-another_hash = MD5.new(another_text.encode()).digest()
+# hash = MD5.new(plaintext.encode()).digest()
+another_hash = hashlib.sha256(another_text.encode()).digest()
+hash = hashlib.sha256(plaintext.encode()).digest()
 print(repr(hash))
 # '\xb1./J\xa883\x974\xa4\xac\x1e\x1b!\xc8\x11'
 
@@ -31,6 +33,8 @@ else:
 # You sign the hash
 signature = key.sign(hash, K)
 print(len(signature), RSA.__name__)
+import sys
+print(sys.getsizeof(signature))
 # (1, 'Crypto.PublicKey.RSA')
 # (2, 'Crypto.PublicKey.DSA')
 # (2, 'Crypto.PublicKey.ElGamal')
