@@ -7,9 +7,9 @@
 from utils import *
 
 offline_debug_mode = True
-seed_server = ('192.168.0.197', 8765) 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 if not offline_debug_mode:
     sock.connect(seed_server)
-    
+    send_msg(sock, protocols['miner']['node_miner'])
+    seed_add = recv_msg(sock, 4) # 4 bytes for ipv4 address?
+    sock.connect(seed_add)

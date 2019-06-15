@@ -8,14 +8,16 @@
     "seed_server": {
         "node_new": 0,
         "node_wallet": 1,
-        "node_report": 2
+        "node_report": 2,
+        "node_miner": 3
     },
     "wallet": {
         "get_block": 0,
         "finish_block": 1
     },
     "miner": {
-        "transaction": 0
+        "transaction": 0,
+        "block_ready": 1
     }
 }
 

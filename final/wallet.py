@@ -11,15 +11,16 @@ from pathlib import Path
 from uuid import getnode as get_mac
 from utils import *
 
-seed_server = ('192.168.0.197', 8765) 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 # Check a users balance
 def get_balance(wallet_id):
-    seed_ip = find_seed()
+    seed_ip = find_seed(protocols['seed_server']['node_wallet'])
     sock.connect((seed_ip, 8765))
-    send_msg(sock, protocols.wallet.get_block) # protocols.get_block
-    block_data = recv_msg(sock, 1000)
+
+    msg = generate_msg([protocols['all']['no_broadcast'], protocols['wallet']['get_block']])
+    send_msg(sock, msg) # protocols.get_block
+
+    block_data = decode_msg(recv_msg(sock, 1000))
+
     balance = 0
     # we must go through each event in the block and trace the relevant ones to get our balance
     
@@ -27,11 +28,10 @@ def get_balance(wallet_id):
 
 # Send coins to a wallet id
 def send_coins(recipient, amount):
-    seed_ip = find_seed()
+    seed_ip = find_seed(protocols['seed_server']['node_wallet'])
     sock.connect((seed_ip, 8765))
 
-    # this form of communicating the transaction is not necessarily how it should work
-    # ideally the entire message is simply binary data
+    transaction_msg = generate_msg([protocols['all']['broadcast'], protocols['all']['make_transaction'], ])
     transaction_msg = str(protocols.all.make_transaction) + "recipient=" + str(recipient) + ",amount=" + str(amount)
     send_msg(sock, transaction_msg)
     transaction_success = recv_msg(sock, 100)

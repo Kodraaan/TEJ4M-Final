@@ -20,7 +20,7 @@
 | Transactions | 1336x10=13360 |
 | Miner Reward | 64+u8 |
 | Number of Wallets | u32 |
-| Account Balances | u32 x 64 |
+| Account Balances (n users) | (u32+64) x n |
 | Proof of Work Padding | 160 |
 |||
 | **TOTAL** | 13816+32x64 |
