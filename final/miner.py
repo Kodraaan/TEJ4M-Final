@@ -14,7 +14,6 @@ offline_debug_mode = True
 
 # TODO: listen_for_block (wait)
 
-# TODO: pack_block
 def pack_block(transactions, past_block):
     # transactions is a list of transactions
     # past_block is a byte object
@@ -23,6 +22,8 @@ def pack_block(transactions, past_block):
 # TODO: verify transaction
 
 # TODO: complete_block
+def mine(block):
+    pass
 
 # Initialization
 if not offline_debug_mode:
