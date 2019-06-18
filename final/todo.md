@@ -1,26 +1,26 @@
 ## Transaction Message Breakdown (BIG ENDIAN)
-| Name           | Size (bits) |
+| Name           | Size (bits, unsigned) |
 | -------------- |:-----------:|
-| Transaction ID | u32 |
+| Transaction ID | 32 |
 | Sender Address | 64 |
 | Receipient Address | 64 |
 | Sender IP      | 32 |
-| Transaction Amount | u32 |
-| Sender Balance | u32 |
+| Transaction Amount | 32 |
+| Sender Balance | 32 |
 | Sender Public Key | 1024 |
-| Digital Signature | 56 |
+| Digital Signature | 64 |
 |||
-| **TOTAL** | 1336 |
+| **TOTAL** | 1344 |
 
 ## Block Breakdown (BIG ENDIAN)
-| Name | Size (bits) |
+| Name | Size (bits, unsigned) |
 | -- |:--:|
-| Block ID | u32 |
+| Block ID | 32 |
 | Previous Block Hash | 160 |
-| Transactions | 1336x10=13360 |
-| Miner Reward | 64+u8 |
-| Number of Wallets | u32 |
-| Account Balances (n users) | (u32+64) x n |
+| Transactions | 1344x10=13440 |
+| Miner Reward | 64+8 |
+| Number of Wallets | 32 |
+| Account Balances (n users) | (64+32) x n |
 | Proof of Work Padding | 160 |
 |||
-| **TOTAL** | 13816+32x64 |
+| **TOTAL** | 13896+32x64 |

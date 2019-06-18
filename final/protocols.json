@@ -3,21 +3,23 @@
         "broadcast": true,
         "no_broadcast": false,
 
-        "make_transaction": 0
+        "make_transaction": 0,
+        "get_block": 8,
+        "get_recent_transactions": 9
     },
     "seed_server": {
-        "node_new": 0,
         "node_wallet": 1,
         "node_report": 2,
         "node_miner": 3
     },
     "wallet": {
-        "get_block": 0,
-        "finish_block": 1
+        "get_block": 4,
+        "finish_block": 5,
+        "new_connection": 10
     },
     "miner": {
-        "transaction": 0,
-        "block_ready": 1
+        "transaction": 6,
+        "block_ready": 7
     }
 }
 

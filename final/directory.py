@@ -17,9 +17,10 @@ sock.listen(1)
 
 while True:
     conn, client_addr = sock.accept()
-    conn_type = recv_msg(conn, 20)
+    conn_type = recv_msg(conn, 100)
+    
 
-    if conn_type == protocols.seed_server.node_new or conn_type == protocols.seed_server.node_wallet:
+    if conn_type == protocols['seed_server']['node_miner'] or conn_type == protocols['seed_server']['node_wallet']:
         # A new node is attempting to connect
         if len(queue) == 0:
             # This is the first node, do nothing
@@ -29,7 +30,7 @@ while True:
             seed_node = queue[0]
             send_msg(conn, seed_node["ip"][0])
 
-        if not (conn_type == protocols.seed_server.node_new): # this can be done better, but works for now..
+        if conn_type == protocols['seed_server']['node_wallet']: # this can be done better, but works for now..
             # Add new node to the queue
             node = {
                 "ip": client_addr
@@ -37,7 +38,7 @@ while True:
 
             queue.append(node)
             queue.rotate(-1)
-    elif conn_type == "node_report":
+    elif conn_type == protocols['seed_server']['node_report']:
         # A network node is making a report
         print("A network node is making a report!")
         
